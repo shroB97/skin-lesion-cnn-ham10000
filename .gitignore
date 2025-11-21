@@ -1,0 +1,17 @@
+# Ignore dataset
+data/
+*.jpg
+*.jpeg
+*.png
+*.csv
+*.zip
+*.gz
+
+# Ignore trained models (if too large)
+*.h5
+*.pt
+*.pth
+*.ckpt
+
+# Ignore system files
+.DS_Store
