@@ -1,7 +1,8 @@
 # Multi-Class Skin Lesion Classification using CNN (HAM10000)
-Project repository scaffold created by ChatGPT for the SAT5165 final project.
+Project repository scaffold created for the SAT5165 final project.
 
 **Contents**
+-inside the notebook folder.
 - `data_loader.py` : dataset loading and preprocessing utilities (expects HAM10000).
 - `model.py` : CNN architecture definition (Keras).
 - `train.py` : training script with arguments for hyperparameters and augmentation.
