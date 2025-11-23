@@ -22,7 +22,9 @@ The dataset includes the following 7 classes:
 ---
 
 ## Project Structure
+
 skin-lesion-cnn/
+
 │
 ├── preprocess.py                     # Data loading, preprocessing, augmentation, normalization
 ├── model.py                          # CNN architecture, transfer learning setup, hyperparameters
