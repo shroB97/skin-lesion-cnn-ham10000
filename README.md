@@ -24,14 +24,14 @@ The dataset includes the following 7 classes:
 ## Project Structure
 skin-lesion-cnn/
 │
-├── preprocess.py # Data loading, preprocessing, augmentation, normalization
-├── model.py # CNN architecture, transfer learning setup, hyperparameters
-├── train.py # Calls preprocess + model, trains model, saves metrics and model
-├── skin_cancer_tl_finetune.keras # Saved trained model
-├── accuracy_curve_tl_finetune.png # Training accuracy plot
-├── loss_curve_tl_finetune.png # Training loss plot
-├── confusion_matrix_tl_finetune.png# Confusion matrix
-└── README.md # Project documentation
+├── preprocess.py                     # Data loading, preprocessing, augmentation, normalization
+├── model.py                          # CNN architecture, transfer learning setup, hyperparameters
+├── train.py                          # Calls preprocess + model, trains model, saves metrics and model
+├── skin_cancer_tl_finetune.keras     # Saved trained model
+├── accuracy_curve_tl_finetune.png    # Training accuracy plot
+├── loss_curve_tl_finetune.png        # Training loss plot
+├── confusion_matrix_tl_finetune.png  # Confusion matrix
+└── README.md                          # Project documentation
 
 ---
 
