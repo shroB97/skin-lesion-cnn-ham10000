@@ -33,7 +33,7 @@ The dataset includes the following 7 classes:
 
 ```bash
 python train.py
-
+'''
 This will:
 
 -Load and preprocess the data
