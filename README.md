@@ -22,31 +22,35 @@ The dataset includes the following 7 classes:
 ---
 
 ## Project Structure
-
+skin-lesion-cnn/
+│
+├── preprocess.py # Data loading, preprocessing, augmentation, normalization
+├── model.py # CNN architecture, transfer learning setup, hyperparameters
+├── train.py # Calls preprocess + model, trains model, saves metrics and model
+├── skin_cancer_tl_finetune.keras # Saved trained model
+├── accuracy_curve_tl_finetune.png # Training accuracy plot
+├── loss_curve_tl_finetune.png # Training loss plot
+├── confusion_matrix_tl_finetune.png# Confusion matrix
+└── README.md # Project documentation
 
 ---
 
 ## How to Run
 
 1. Ensure dataset is downloaded and folder paths in `preprocess.py` are correct.
-2. Run the training and evaluation script:
+2. Run the training and evaluation script 'train.py'
 
-```bash
-python train.py
-'''
-This will:
 
--Load and preprocess the data
+## This will
 
--Compute class weights for imbalanced classes
+- Load and preprocess the data
+- Compute class weights for imbalanced classes
+- Build the CNN model (MobileNetV2 + custom top layers)
+- Train the model with early stopping and learning rate scheduler
+- Save the trained model (`skin_cancer_tl_finetune.keras`)
+- Generate accuracy, loss plots, and confusion matrix
 
--Build the CNN model (MobileNetV2 + custom top layers)
-
--Train the model with early stopping and learning rate scheduler
-
--Save the trained model (skin_cancer_tl_finetune.keras)
-
--Generate accuracy, loss plots, and confusion matrix
+---
 
 ## Results
 
@@ -75,4 +79,12 @@ This will:
 - **Data augmentation** (flips, rotations, brightness/contrast, zoom) is used to improve generalization.  
 - **Transfer learning** with MobileNetV2 leverages pretrained features and reduces training time.  
 - **Early stopping** and learning rate scheduling help prevent overfitting and optimize training.
+
+---
+
+## Author
+
+**Shrobanti Banerjee**  
+**Fnu Sowrabh**
+
 
