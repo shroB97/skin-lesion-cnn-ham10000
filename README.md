@@ -25,62 +25,143 @@ The dataset includes the following 7 classes:
 
 skin-lesion-cnn/
 
-│
-├── preprocess.py                     # Data loading, preprocessing, augmentation, normalization
-├── model.py                          # CNN architecture, transfer learning setup, hyperparameters
-├── train.py                          # Calls preprocess + model, trains model, saves metrics and model
-├── skin_cancer_tl_finetune.keras     # Saved trained model
-├── accuracy_curve_tl_finetune.png    # Training accuracy plot
-├── loss_curve_tl_finetune.png        # Training loss plot
-├── confusion_matrix_tl_finetune.png  # Confusion matrix
-└── README.md                          # Project documentation
+├── main.ipynb
+├── README.md
+├── /datasets (auto-downloaded)
+├── /HAM10000_images_part_1
+├── /HAM10000_images_part_2
+└── HAM10000_metadata.csv
+
 
 ---
 
-## How to Run
+---
 
-1. Ensure dataset is downloaded and folder paths in `preprocess.py` are correct.
-2. Run the training and evaluation script 'train.py'
+## ** Code Overview**
+
+This section summarizes all major steps performed in the notebook.
+
+---
+##  How to Run
+
+- Install dependencies
+
+- Run the full notebook:
+
+'main.ipynb'
+
+Dataset auto-downloads and the entire pipeline executes end-to-end.
 
 
-## This will
+## **1. Dataset Download & Setup**
 
-- Load and preprocess the data
-- Compute class weights for imbalanced classes
-- Build the CNN model (MobileNetV2 + custom top layers)
-- Train the model with early stopping and learning rate scheduler
-- Save the trained model (`skin_cancer_tl_finetune.keras`)
-- Generate accuracy, loss plots, and confusion matrix
+- Dataset downloaded using `kagglehub`.
+- Images copied into the working directory.
+- `HAM10000_metadata.csv` loaded.
+- Image paths mapped from two folders:
+  - `HAM10000_images_part_1/`
+  - `HAM10000_images_part_2/`
 
 ---
 
-## Results
+## **2. Data Exploration**
 
-- **Validation Accuracy:** ~0.60
-
-- **Classification Report:** precision, recall, f1-score per class
-
-| Class | Precision | Recall | F1-score |
-|-------|-----------|--------|----------|
-| akiec | 0.46      | 0.51   | 0.49     |
-| bcc   | 0.47      | 0.49   | 0.48     |
-| bkl   | 0.41      | 0.47   | 0.43     |
-| df    | 0.09      | 0.88   | 0.16     |
-| mel   | 0.32      | 0.59   | 0.41     |
-| nv    | 0.95      | 0.61   | 0.74     |
-| vasc  | 0.43      | 0.86   | 0.58     |
-
-- **Confusion Matrix:** `confusion_matrix_tl_finetune.png`  
-- **Training Plots:** `accuracy_curve_tl_finetune.png`, `loss_curve_tl_finetune.png`
+- Distribution of the 7 skin lesion classes is displayed.
+- Random sample images per class visualized.
 
 ---
 
-## Notes
+## **3. Train–Validation–Test Split**
 
-- The dataset is highly imbalanced; **class weights** are applied to reduce bias.  
-- **Data augmentation** (flips, rotations, brightness/contrast, zoom) is used to improve generalization.  
-- **Transfer learning** with MobileNetV2 leverages pretrained features and reduces training time.  
-- **Early stopping** and learning rate scheduling help prevent overfitting and optimize training.
+- **Stratified split** to preserve class balance:
+  - **70% Train**
+  - **15% Validation**
+  - **15% Test**
+
+- Metadata updated with full file paths of each image.
+
+---
+
+## **4. Image Preprocessing & Data Generators**
+
+Using `ImageDataGenerator`:
+
+### **Training Generator**
+- ResNet50 preprocessing
+- Rotation, width/height shift
+- Zoom, horizontal/vertical flip
+
+### **Validation & Test Generators**
+- Only preprocessing (no augmentation)
+
+---
+
+## **5. Class Imbalance Handling**
+
+- Severe imbalance in classes like DF and VASC.
+- Computed weights using:
+
+```python
+compute_class_weight('balanced', classes, y_train)
+
+
+## **6. Model Architecture**
+
+Base model: **ResNet50 (ImageNet-pretrained)**  
+Two-phase training pipeline:
+
+### **Stage 1: Frozen Base**
+- Freeze all ResNet50 layers  
+- Add custom classification head:
+  - `GlobalAveragePooling2D`
+  - `BatchNormalization`
+  - `Dense(256, activation='relu')`
+  - `Dropout(0.4)`
+  - `Dense(7, activation='softmax')`
+
+### **Stage 2: Fine-Tuning**
+- Unfreeze layers from **layer 100 onward**
+- Use a lower learning rate for stable training
+
+---
+
+## **7. Training**
+
+Training occurs in two stages:
+
+### **Stage 1**
+- Learning rate: **1e-3**
+- Only the custom head is trained (base frozen)
+
+### **Stage 2**
+- Learning rate: **1e-5**
+- Fine-tune the ResNet50 base (from layer 100+)
+
+### **Callbacks Used**
+- `EarlyStopping`
+- `ReduceLROnPlateau`
+
+---
+
+## **8. Evaluation**
+
+Evaluation metrics are computed on **validation** and **test** sets:
+
+- **Accuracy**
+- **ROC-AUC (macro)**
+- **Confusion Matrix**
+- **Training History Plots** (Loss & Accuracy curves)
+
+---
+
+## **9. Performance Summary**
+
+| **Metric**         | **Result** |
+|--------------------|------------|
+| Test Accuracy      | ~0.68      |
+| Validation AUC     | ~0.94      |
+| Test AUC           | ~0.94      |
+
 
 ---
 
