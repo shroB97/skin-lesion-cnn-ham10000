@@ -103,7 +103,7 @@ Using `ImageDataGenerator`:
 
 ```python
 compute_class_weight('balanced', classes, y_train)
-
+```python 
 
 ## **6. Model Architecture**
 
